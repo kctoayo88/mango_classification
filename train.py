@@ -15,8 +15,6 @@ mcp_save = ModelCheckpoint('./models/model.h5', save_best_only=True, monitor='va
 img_width, img_height = 224, 224
 n_batch_size = 16
 n_epochs = 500
-n_training_steps_per_epoch = 3000
-n_validation_steps_per_epoch = 300
 
 train_datagen = ImageDataGenerator(horizontal_flip=True,
                                    vertical_flip=True,
@@ -29,11 +27,11 @@ train_generator = train_datagen.flow_from_directory('./train/data',
                                                     shuffle=True,
                                                     subset='training')
 
-vali_generator = train_datagen.flow_from_directory('./train/data',
-                                                   target_size=(img_height, img_width),
-                                                   batch_size=n_batch_size,
-                                                   shuffle=True,
-                                                   subset='validation')
+valid_generator = train_datagen.flow_from_directory('./train/data',
+                                                    target_size=(img_height, img_width),
+                                                    batch_size=n_batch_size,
+                                                    shuffle=True,
+                                                    subset='validation')
 
 # 以訓練好的 EfficientNetB3 為基礎來建立模型
 net = EfficientNetB3(input_shape=(img_height, img_width, 3),
@@ -65,10 +63,10 @@ print('\n')
 model.summary()
 
 model.fit_generator(train_generator,
-                    steps_per_epoch = n_training_steps_per_epoch,
-                    validation_data = vali_generator,
+                    steps_per_epoch = (train_generator.samples*2) // n_batch_size,
+                    validation_data = valid_generator,
                     epochs = n_epochs,
-                    validation_steps = n_validation_steps_per_epoch,
+                    validation_steps = (valid_generator.samples) // n_batch_size,
                     class_weight='balanced',
                     callbacks = [mcp_save])
 
