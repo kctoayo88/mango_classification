@@ -15,14 +15,18 @@ The training model is EffectientNetB3 that coded by Keras API.
 ## Usage
 
 1. Download the dataset:  
+  
 Mango dataset(https://aidea-web.tw/topic/72f6ea6a-9300-445a-bedc-9e9f27d91b1c)  
-
+  
 2. Clone this repo:  
 ```
 git clone https://github.com/kctoayo88/mango_classification.git
 ```  
   
 3. Install the dependencies package(Keras, TF, Numpy, etc):  
+```
+pip install keras tensorflow numpy
+```
   
 4. Train model:  
 ```
